@@ -1,10 +1,11 @@
 package therapist_desktopJavaApp.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import therapist_desktopJavaApp.model.dao.CityDAO;
-import therapist_desktopJavaApp.model.dto.CityDTO;
+import therapist_desktopJavaApp.model.dto.in.CityDTOIN;
 
 public class CityService {
 	private CityDAO cityDAO;
@@ -13,9 +14,9 @@ public class CityService {
 		this.cityDAO = new CityDAO();
 	}
 
-	public List<CityDTO> getCitiesByProvinceId(int provinceId) {
+	public List<CityDTOIN> getCitiesByProvinceId(UUID provinceId) {
         return cityDAO.findCitiesByProvinceId(provinceId).stream()
-        		.map(c -> new CityDTO(c.getCityId(), c.getCityName(), c.getCityZIPCode(), c.getProvinceId()))
+        		.map(c -> new CityDTOIN(c.getCityId().toString(), c.getCityName(), c.getCityZIPCode(), c.getProvinceId().toString()))
         		.collect(Collectors.toList());
     }
 

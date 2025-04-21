@@ -1,25 +1,27 @@
-package therapist_desktopJavaApp.model.dto;
+package therapist_desktopJavaApp.model.dto.out;
 
-public class CityDTO {
-    private int cityDTOId;
+import java.util.UUID;
+
+public class CityDTOOUT {
+    private UUID cityDTOId;
     private String cityDTOName;
     private String cityDTOZIPCode;
-    private int provinceId;
+    private UUID provinceId;
 
-    public CityDTO() {}
+    public CityDTOOUT() {}
 
-    public CityDTO(int cityDTOId, String cityDTOName, String cityDTOZIPCode, int provinceId) {
+    public CityDTOOUT(UUID cityDTOId, String cityDTOName, String cityDTOZIPCode, UUID provinceId) {
         this.cityDTOId = cityDTOId;
         this.cityDTOName = cityDTOName;
         this.cityDTOZIPCode = cityDTOZIPCode;
         this.provinceId = provinceId;
     }
 
-	public int getCityDTOId() {
+	public UUID getCityDTOId() {
 		return cityDTOId;
 	}
 
-	public void setCityDTOId(int cityDTOId) {
+	public void setCityDTOId(UUID cityDTOId) {
 		this.cityDTOId = cityDTOId;
 	}
 
@@ -39,11 +41,11 @@ public class CityDTO {
 		this.cityDTOZIPCode = cityDTOZIPCode;
 	}
 
-	public int getProvinceId() {
+	public UUID getProvinceId() {
 		return provinceId;
 	}
 
-	public void setProvinceId(int provinceId) {
+	public void setProvinceId(UUID provinceId) {
 		this.provinceId = provinceId;
 	}
     

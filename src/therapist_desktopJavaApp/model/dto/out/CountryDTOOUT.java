@@ -1,20 +1,21 @@
-package therapist_desktopJavaApp.model.dto;
+package therapist_desktopJavaApp.model.dto.out;
 
-public class CountryDTO {
-	private int countryDTOId;
+import java.util.UUID;
+
+public class CountryDTOOUT {
+	private UUID countryDTOId;
 	private String countryDTOName;
 	
-	public CountryDTO(int countryDTOId, String countryDTOName) {
-		super();
+	public CountryDTOOUT(UUID countryDTOId, String countryDTOName) {
 		this.countryDTOId = countryDTOId;
 		this.countryDTOName = countryDTOName;
 	}
 	
-	public int getCountryDTOId() {
+	public UUID getCountryDTOId() {
 		return countryDTOId;
 	}
 	
-	public void setCountryDTOId(int countryDTOId) {
+	public void setCountryDTOId(UUID countryDTOId) {
 		this.countryDTOId = countryDTOId;
 	}
 	

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import therapist_desktopJavaApp.model.entity.Country;
 
@@ -28,7 +29,7 @@ public class CountryDAO {
             while (rs.next()) {
             	
                 Country c = new Country(
-                    rs.getInt("country_id"),
+                	UUID.fromString(rs.getString("country_id")),
                     rs.getString("country_name")
                 );
                 

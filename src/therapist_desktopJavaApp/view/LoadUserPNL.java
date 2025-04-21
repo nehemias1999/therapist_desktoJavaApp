@@ -10,16 +10,15 @@ import java.time.ZoneId;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.Date;
 import javax.swing.JFormattedTextField.AbstractFormatter;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.jdatepicker.impl.UtilDateModel;
 
 import therapist_desktopJavaApp.controller.ViewManager;
-import therapist_desktopJavaApp.model.dto.CityDTO;
-import therapist_desktopJavaApp.model.dto.CountryDTO;
-import therapist_desktopJavaApp.model.dto.ProvinceDTO;
+import therapist_desktopJavaApp.model.dto.out.CityDTOOUT;
+import therapist_desktopJavaApp.model.dto.out.CountryDTOOUT;
+import therapist_desktopJavaApp.model.dto.out.ProvinceDTOOUT;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -37,9 +36,9 @@ public class LoadUserPNL extends JPanel {
     private JTextField txtNumero;
     private JTextField txtPiso;
     private JTextField txtDepartamento;
-    private JComboBox<CountryDTO> comboCountry;
-    private JComboBox<ProvinceDTO> comboProvince;
-    private JComboBox<CityDTO> comboCity;
+    private JComboBox<CountryDTOOUT> comboCountry;
+    private JComboBox<ProvinceDTOOUT> comboProvince;
+    private JComboBox<CityDTOOUT> comboCity;
 
     public LoadUserPNL(ViewManager viewManager) {
         this.viewManager = viewManager;
@@ -72,8 +71,8 @@ public class LoadUserPNL extends JPanel {
         comboCity.setEnabled(false);
         
         // Valor por defecto para ciudad al inicio
-        comboProvince.addItem(new ProvinceDTO(0, "Seleccionar...", 0));
-        comboCity.addItem(new CityDTO(0, "Seleccionar...", "", 0));
+        comboProvince.addItem(new ProvinceDTOOUT(0, "Seleccionar...", 0));
+        comboCity.addItem(new CityDTOOUT(0, "Seleccionar...", "", 0));
 
         // Renderers
         comboCountry.setRenderer(new DefaultListCellRenderer() {
@@ -81,7 +80,7 @@ public class LoadUserPNL extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof CountryDTO ? ((CountryDTO) value).getCountryDTOName() : "");
+                setText(value instanceof CountryDTOOUT ? ((CountryDTOOUT) value).getCountryDTOName() : "");
                 return this;
             }
         });
@@ -91,7 +90,7 @@ public class LoadUserPNL extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof ProvinceDTO ? ((ProvinceDTO) value).getProvinceDTOName() : "");
+                setText(value instanceof ProvinceDTOOUT ? ((ProvinceDTOOUT) value).getProvinceDTOName() : "");
                 return this;
             }
         });
@@ -101,7 +100,7 @@ public class LoadUserPNL extends JPanel {
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof CityDTO ? ((CityDTO) value).getCityDTOName() : "");
+                setText(value instanceof CityDTOOU ? ((CityDTOOUT) value).getCityDTOName() : "");
                 return this;
             }
         });
@@ -111,13 +110,13 @@ public class LoadUserPNL extends JPanel {
         // Seleccionar valor por defecto al inicio
         comboCountry.setSelectedIndex(0);
         comboCountry.addActionListener(e -> {
-            CountryDTO country = (CountryDTO) comboCountry.getSelectedItem();
+            CountryDTOOUT country = (CountryDTOOUT) comboCountry.getSelectedItem();
             if (country != null && country.getCountryDTOId() > 0) {
                 loadProvinces(country.getCountryDTOId());
                 comboProvince.setEnabled(true);
             } else {
                 comboProvince.removeAllItems();
-                comboProvince.addItem(new ProvinceDTO(0, "Seleccionar...", 0));
+                comboProvince.addItem(new ProvinceDTOOUT(0, "Seleccionar...", 0));
                 comboProvince.setEnabled(false);
             }
         });
@@ -206,20 +205,20 @@ public class LoadUserPNL extends JPanel {
     
     private void loadCountries() {
         comboCountry.removeAllItems();
-        comboCountry.addItem(new CountryDTO(0,"Seleccionar..."));
-        for (CountryDTO cdto : viewManager.getAllCountriesDTO()) comboCountry.addItem(cdto);
+        comboCountry.addItem(new CountryDTOOUT("0,"Seleccionar..."));
+        for (CountryDTOOUT cdto : viewManager.getAllCountriesDTO()) comboCountry.addItem(cdto);
     }
 
     private void loadProvinces(int countryId) {
         comboProvince.removeAllItems();
-        comboProvince.addItem(new ProvinceDTO(0,"Seleccionar...",0));
-        for (ProvinceDTO pdto : viewManager.getProvincesDTOByCountryId(countryId)) comboProvince.addItem(pdto);
+        comboProvince.addItem(new ProvinceDTOOUT("0,"Seleccionar...",0));
+        for (ProvinceDTOOUT pdto : viewManager.getProvincesDTOByCountryId(countryId)) comboProvince.addItem(pdto);
     }
 
     private void loadCities(int provinceId) {
         comboCity.removeAllItems();
-        comboCity.addItem(new CityDTO(0,"Seleccionar...","",provinceId));
-        for (CityDTO cdto: viewManager.getCitiesDTOByProvinceId(provinceId)) comboCity.addItem(cdto);
+        comboCity.addItem(new CityDTOOUT("0","Seleccionar...","",provinceId));
+        for (CityDTOOUT cdto: viewManager.getCitiesDTOByProvinceId(provinceId)) comboCity.addItem(cdto);
     }
 
     private void addRow(JPanel panel, GridBagConstraints gbc,int row,String label,JComponent comp) {
@@ -239,9 +238,9 @@ public class LoadUserPNL extends JPanel {
             txtNumero.getText().trim(),
             txtPiso.getText().trim(),
             txtDepartamento.getText().trim(),
-            String.valueOf(((CountryDTO)comboCountry.getSelectedItem()).getCountryDTOId()),
-            String.valueOf(((ProvinceDTO)comboProvince.getSelectedItem()).getProvinceDTOId()),
-            String.valueOf(((CityDTO)comboCity.getSelectedItem()).getCityDTOId())
+            String.valueOf(((CountryDTOOUT)comboCountry.getSelectedItem()).getCountryDTOId()),
+            String.valueOf(((ProvinceDTOOUT)comboProvince.getSelectedItem()).getProvinceDTOId()),
+            String.valueOf(((CityDTOOUT)comboCity.getSelectedItem()).getCityDTOId())
         );
         
     }

@@ -1,21 +1,21 @@
-package therapist_desktopJavaApp.model.dto;
+package therapist_desktopJavaApp.model.dto.in;
 
-public class ProvinceDTO {
-	private int ProvinceDTOId;
+public class ProvinceDTOIN {
+	private String ProvinceDTOId;
     private String provinceDTOName;
-    private int countryId;
+    private String countryId;
     
-	public ProvinceDTO(int provinceDTOId, String provinceDTOName, int countryId) {
+	public ProvinceDTOIN(String provinceDTOId, String provinceDTOName, String countryId) {
 		this.ProvinceDTOId = provinceDTOId;
 		this.provinceDTOName = provinceDTOName;
 		this.countryId = countryId;
 	}
 	
-	public int getProvinceDTOId() {
+	public String getProvinceDTOId() {
 		return ProvinceDTOId;
 	}
 	
-	public void setProvinceDTOId(int provinceDTOId) {
+	public void setProvinceDTOId(String provinceDTOId) {
 		ProvinceDTOId = provinceDTOId;
 	}
 	
@@ -27,7 +27,7 @@ public class ProvinceDTO {
 		this.provinceDTOName = provinceDTOName;
 	}
     
-	public int getCountryId() {
+	public String getCountryId() {
 		return countryId;
 	}
 }

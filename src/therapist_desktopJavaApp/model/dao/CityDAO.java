@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import therapist_desktopJavaApp.model.entity.City;
 
@@ -19,22 +20,23 @@ public class CityDAO {
         "SELECT city_id, city_name, city_zip_code, province_id " +
         "FROM tbl_city WHERE province_id = ? ORDER BY city_name";
 
-    public List<City> findCitiesByProvinceId(int provinceId) {
+    public List<City> findCitiesByProvinceId(UUID provinceId) {
         List<City> list = new ArrayList<>();
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_PROV)) {
         	
-            ps.setInt(1, provinceId);
+            ps.setString(1, provinceId.toString());
             try (ResultSet rs = ps.executeQuery()) {
                 
             	while (rs.next()) {
             		
                     City c = new City(
-                    		rs.getInt("city_id"),
-                            rs.getString("city_namee"),
+                    		
+                    		UUID.fromString(rs.getString("city_id")),
+                            rs.getString("city_name"),
                             rs.getString("city_zip_code"),
-                            rs.getInt("province_id")
+                            UUID.fromString(rs.getString("province_id"))
                             
                     );
                     

@@ -1,17 +1,19 @@
 package therapist_desktopJavaApp.model.entity;
 
+import java.util.UUID;
+
 public class Province { 
-    private int provinceId;
+    private UUID provinceId;
     private String provinceName;
-    private int countryId;
+    private UUID countryId;
     
-	public Province(int provinceId, String provinceName, int countryId) {
+	public Province(UUID provinceId, String provinceName, UUID countryId) {
 		this.provinceId = provinceId;
 		this.provinceName = provinceName;
 		this.countryId = countryId;
 	}
 
-	public int getProvinceId() {
+	public UUID getProvinceId() {
 		return this.provinceId;
 	}
 	
@@ -19,7 +21,7 @@ public class Province {
 		return this.provinceName;
 	}
 	
-	public int getCountryId() {
+	public UUID getCountryId() {
 		return this.countryId;
 	}
 }

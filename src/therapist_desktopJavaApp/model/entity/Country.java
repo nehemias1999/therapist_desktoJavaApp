@@ -1,19 +1,21 @@
 package therapist_desktopJavaApp.model.entity;
 
+import java.util.UUID;
+
 public class Country {
-	private int countryId;
+	private UUID countryId;
 	private String countryName;
 	
-	public Country(int countryId, String countryName) {
+	public Country(UUID countryId, String countryName) {
 		this.countryId = countryId;
 		this.countryName = countryName;
 	}
 
-	public int getCountryId() {
+	public UUID getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(int countryId) {
+	public void setCountryId(UUID countryId) {
 		this.countryId = countryId;
 	}
 

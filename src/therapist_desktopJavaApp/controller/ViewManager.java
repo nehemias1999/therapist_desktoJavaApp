@@ -6,9 +6,9 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import therapist_desktopJavaApp.view.MainFRM;
-import therapist_desktopJavaApp.model.dto.CityDTO;
-import therapist_desktopJavaApp.model.dto.CountryDTO;
-import therapist_desktopJavaApp.model.dto.ProvinceDTO;
+import therapist_desktopJavaApp.model.dto.in.CityDTOIN;
+import therapist_desktopJavaApp.model.dto.in.CountryDTOIN;
+import therapist_desktopJavaApp.model.dto.in.ProvinceDTOIN;
 import therapist_desktopJavaApp.view.LoadUserPNL;
 import therapist_desktopJavaApp.view.MainMenuPNL;
 import therapist_desktopJavaApp.view.ViewCalendarPNL;
@@ -55,15 +55,15 @@ public class ViewManager {
 		mainFRM.showPanel("LoadUser");
 	}
 	
-	public List<CountryDTO> getAllCountriesDTO() {
+	public List<CountryDTOIN> getAllCountriesDTO() {
 		return controller.getAllCountriesDTO();
 	}
 	
-	public List<ProvinceDTO> getProvincesDTOByCountryId(int countryId) {
+	public List<ProvinceDTOIN> getProvincesDTOByCountryId(int countryId) {
 		return controller.getProvincesDTOByCountryId(countryId);
 	}
 		
-	public List<CityDTO> getCitiesDTOByProvinceId(int provinciaId) {
+	public List<CityDTOIN> getCitiesDTOByProvinceId(int provinciaId) {
 		return controller.getCitiesDTOByProvinceId(provinciaId);
 	}
 	

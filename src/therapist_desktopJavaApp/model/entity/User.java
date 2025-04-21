@@ -1,8 +1,10 @@
 package therapist_desktopJavaApp.model.entity;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class User {
+	private UUID userId;
     private String userDNI;
     private String userName;
     private String userLastName;
@@ -10,16 +12,27 @@ public class User {
     private String userEmail;
     private String userAddress;
     private int userAddressNumber;
-    private Integer userAddressFloor;
+    private int userAddressFloor;
     private String userAddressApartment;
-    private int countryId;
-    private int provinceId;
-    private int cityId;
+    private UUID countryId;
+    private UUID provinceId;
+    private UUID cityId;
 
-	public User(String userDNI, String userName, String userLastName, LocalDate userBirthDate, String userEmail,
-			String userAddress, int userAddressNumber, Integer userAddressFloor, String userAddressApartment,
-			int countryId, int provinceId, int cityId) {
-		super();
+	public User(
+			UUID userId,
+			String userDNI, 
+			String userName, 
+			String userLastName, 
+			LocalDate userBirthDate, 
+			String userEmail,
+			String userAddress, 
+			int userAddressNumber, 
+			int userAddressFloor, 
+			String userAddressApartment,
+			UUID countryId, 
+			UUID provinceId, 
+			UUID cityId) {
+		this.userId = userId;
 		this.userDNI = userDNI;
 		this.userName = userName;
 		this.userLastName = userLastName;
@@ -32,6 +45,14 @@ public class User {
 		this.countryId = countryId;
 		this.provinceId = provinceId;
 		this.cityId = cityId;
+	}
+	
+	public UUID getUserId() {
+		return userId;
+	}
+
+	public void setUserId(UUID userId) {
+		this.userId = userId;
 	}
     
 	public String getUserDNI() {
@@ -90,11 +111,11 @@ public class User {
 		this.userAddressNumber = userAddressNumber;
 	}
 
-	public Integer getUserAddressFloor() {
+	public int getUserAddressFloor() {
 		return userAddressFloor;
 	}
 
-	public void setUserAddressFloor(Integer userAddressFloor) {
+	public void setUserAddressFloor(int userAddressFloor) {
 		this.userAddressFloor = userAddressFloor;
 	}
 
@@ -106,27 +127,27 @@ public class User {
 		this.userAddressApartment = userAddressApartment;
 	}
 
-	public int getCountryId() {
+	public UUID getCountryId() {
 		return countryId;
 	}
 
-	public void setCountryId(int countryId) {
+	public void setCountryId(UUID countryId) {
 		this.countryId = countryId;
 	}
 
-	public int getProvinceId() {
+	public UUID getProvinceId() {
 		return provinceId;
 	}
 
-	public void setProvinceId(int provinceId) {
+	public void setProvinceId(UUID provinceId) {
 		this.provinceId = provinceId;
 	}
 
-	public int getCityId() {
+	public UUID getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(int cityId) {
+	public void setCityId(UUID cityId) {
 		this.cityId = cityId;
 	}
 

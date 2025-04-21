@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import therapist_desktopJavaApp.model.dao.CountryDAO;
-import therapist_desktopJavaApp.model.dto.CountryDTO;
+import therapist_desktopJavaApp.model.dto.in.CountryDTOIN;
 
 public class CountryService {
 	private CountryDAO countryDAO;
@@ -13,9 +13,9 @@ public class CountryService {
 		this.countryDAO = new CountryDAO();
 	}
 
-	public List<CountryDTO> getAllCountries() {
+	public List<CountryDTOIN> getAllCountries() {
         return countryDAO.findAllCountries().stream()
-    			.map(p -> new CountryDTO(p.getCountryId(), p.getCountryName()))
+    			.map(p -> new CountryDTOIN(p.getCountryId().toString(), p.getCountryName()))
     			.collect(Collectors.toList());
     }
 	

@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import therapist_desktopJavaApp.model.entity.Province;
 
@@ -31,11 +32,12 @@ public class ProvinceDAO {
         		ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
             	
-                Province p = new Province(
+                Province p = new Province(	
                 		
-                    rs.getInt("province_id"),
+                	UUID.fromString(rs.getString("province_id")),
                     rs.getString("province_name"),
-                    rs.getInt("country_id")
+                    UUID.fromString(rs.getString("country_id"))
+                    
                 );
                 
                 list.add(p);
@@ -47,22 +49,22 @@ public class ProvinceDAO {
         return list;
     }
     
-    public List<Province> findProvincesByCountryId(int countryId) {
+    public List<Province> findProvincesByCountryId(UUID countryId) {
         List<Province> list = new ArrayList<>();
         
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_COUNTRY)) {
         	
-            ps.setInt(1, countryId);
+            ps.setString(1, countryId.toString());
             try (ResultSet rs = ps.executeQuery()) {
                 
             	while (rs.next()) {
             		
                     Province p = new Province(
                     		
-                		rs.getInt("province_id"),
+                		UUID.fromString(rs.getString("province_id")),
                         rs.getString("province_name"),
-                        rs.getInt("country_id")
+                        UUID.fromString(rs.getString("country_id"))
                             
                     );
                     
