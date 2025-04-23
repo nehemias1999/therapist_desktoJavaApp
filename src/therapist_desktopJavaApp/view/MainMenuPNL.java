@@ -23,7 +23,7 @@ public class MainMenuPNL extends JPanel {
 	
 	private ViewManager viewManager;
 
-    private JButton btnLoadUser;
+    private JButton btnLoadPatient;
     private JButton btnShowCalendar;
     private JButton btnExit;
 
@@ -49,13 +49,13 @@ public class MainMenuPNL extends JPanel {
 
         // Creación de botones
         
-        btnLoadUser = new JButton("Cargar Usuario");
+        btnLoadPatient = new JButton("Cargar Usuario");
         btnShowCalendar = new JButton("Ver calendario");
         btnExit = new JButton("Salir");
 
         // Configuración común para los botones (excepto "Salir")
         
-        JButton[] standardButtons = {btnLoadUser, btnShowCalendar};
+        JButton[] standardButtons = {btnLoadPatient, btnShowCalendar};
         for (JButton btn : standardButtons) {
             btn.setFont(buttonFont);
             btn.setPreferredSize(btnSize);
@@ -73,7 +73,7 @@ public class MainMenuPNL extends JPanel {
         btnExit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         pnlbuttons.add(Box.createVerticalGlue());
-        pnlbuttons.add(btnLoadUser);
+        pnlbuttons.add(btnLoadPatient);
         pnlbuttons.add(Box.createRigidArea(new Dimension(0, 20)));
         pnlbuttons.add(btnShowCalendar);
         pnlbuttons.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -90,8 +90,8 @@ public class MainMenuPNL extends JPanel {
         
         // Acciones de botones
         
-        btnLoadUser.addActionListener(e -> {
-        	viewManager.showPnlLoadUser(); 
+        btnLoadPatient.addActionListener(e -> {
+        	viewManager.showPnlLoadPatient(); 
         });
 
         btnShowCalendar.addActionListener(e -> {

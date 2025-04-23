@@ -14,8 +14,8 @@ public class ProvinceService {
 		this.provinceDAO = new ProvinceDAO();
 	}
 
-	public List<ProvinceDTOIN> getProvincesByCountryId(UUID countryId) {
-        return provinceDAO.findProvincesByCountryId(countryId).stream()
+	public List<ProvinceDTOIN> getProvincesByCountryId(String countryId) {		
+        return provinceDAO.findProvincesByCountryId(UUID.fromString(countryId)).stream()
     			.map(p -> new ProvinceDTOIN(p.getProvinceId().toString(), p.getProvinceName(), p.getCountryId().toString()))
     			.collect(Collectors.toList());
     }

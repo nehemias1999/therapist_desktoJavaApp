@@ -4,26 +4,27 @@ import javax.swing.JPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.Date;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import org.jdatepicker.impl.UtilDateModel;
 
 import therapist_desktopJavaApp.controller.ViewManager;
-import therapist_desktopJavaApp.model.dto.out.CityDTOOUT;
-import therapist_desktopJavaApp.model.dto.out.CountryDTOOUT;
-import therapist_desktopJavaApp.model.dto.out.ProvinceDTOOUT;
+import therapist_desktopJavaApp.exception.ValidationException;
+import therapist_desktopJavaApp.model.dto.in.CityDTOIN;
+import therapist_desktopJavaApp.model.dto.in.CountryDTOIN;
+import therapist_desktopJavaApp.model.dto.in.ProvinceDTOIN;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 
-public class LoadUserPNL extends JPanel {
+public class LoadPatientPNL extends JPanel {
     private ViewManager viewManager;
 
     private JTextField txtDocumento;
@@ -36,11 +37,11 @@ public class LoadUserPNL extends JPanel {
     private JTextField txtNumero;
     private JTextField txtPiso;
     private JTextField txtDepartamento;
-    private JComboBox<CountryDTOOUT> comboCountry;
-    private JComboBox<ProvinceDTOOUT> comboProvince;
-    private JComboBox<CityDTOOUT> comboCity;
+    private JComboBox<CountryDTOIN> comboCountries;
+    private JComboBox<ProvinceDTOIN> comboProvinces;
+    private JComboBox<CityDTOIN> comboCities;
 
-    public LoadUserPNL(ViewManager viewManager) {
+    public LoadPatientPNL(ViewManager viewManager) {
         this.viewManager = viewManager;
         setLayout(new BorderLayout(0, 20));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -63,44 +64,44 @@ public class LoadUserPNL extends JPanel {
         txtDepartamento = new JTextField(5);
 
         // Combos
-        comboCountry = new JComboBox<>();
-        comboProvince = new JComboBox<>();
-        comboCity = new JComboBox<>();
+        comboCountries = new JComboBox<>();
+        comboProvinces = new JComboBox<>();
+        comboCities = new JComboBox<>();
         
-        comboProvince.setEnabled(false);
-        comboCity.setEnabled(false);
+        comboProvinces.setEnabled(false);
+        comboCities.setEnabled(false);
         
         // Valor por defecto para ciudad al inicio
-        comboProvince.addItem(new ProvinceDTOOUT(0, "Seleccionar...", 0));
-        comboCity.addItem(new CityDTOOUT(0, "Seleccionar...", "", 0));
+        comboProvinces.addItem(new ProvinceDTOIN("", "Seleccionar...", ""));
+        comboCities.addItem(new CityDTOIN("", "Seleccionar...", "", ""));
 
         // Renderers
-        comboCountry.setRenderer(new DefaultListCellRenderer() {
+        comboCountries.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof CountryDTOOUT ? ((CountryDTOOUT) value).getCountryDTOName() : "");
+                setText(value instanceof CountryDTOIN ? ((CountryDTOIN) value).getCountryDTOName() : "");
                 return this;
             }
         });
         
-        comboProvince.setRenderer(new DefaultListCellRenderer() {
+        comboProvinces.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof ProvinceDTOOUT ? ((ProvinceDTOOUT) value).getProvinceDTOName() : "");
+                setText(value instanceof ProvinceDTOIN ? ((ProvinceDTOIN) value).getProvinceDTOName() : "");
                 return this;
             }
         });
         
-        comboCity.setRenderer(new DefaultListCellRenderer() {
+        comboCities.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(value instanceof CityDTOOU ? ((CityDTOOUT) value).getCityDTOName() : "");
+                setText(value instanceof CityDTOIN ? ((CityDTOIN) value).getCityDTOName() : "");
                 return this;
             }
         });
@@ -108,16 +109,30 @@ public class LoadUserPNL extends JPanel {
         loadCountries();
         
         // Seleccionar valor por defecto al inicio
-        comboCountry.setSelectedIndex(0);
-        comboCountry.addActionListener(e -> {
-            CountryDTOOUT country = (CountryDTOOUT) comboCountry.getSelectedItem();
-            if (country != null && country.getCountryDTOId() > 0) {
+        comboCountries.setSelectedIndex(0);
+        comboCountries.addActionListener(e -> {
+            CountryDTOIN country = (CountryDTOIN) comboCountries.getSelectedItem();
+            if (country != null && !country.getCountryDTOId().equals(new String(""))) {
                 loadProvinces(country.getCountryDTOId());
-                comboProvince.setEnabled(true);
+                comboProvinces.setEnabled(true);
             } else {
-                comboProvince.removeAllItems();
-                comboProvince.addItem(new ProvinceDTOOUT(0, "Seleccionar...", 0));
-                comboProvince.setEnabled(false);
+                comboProvinces.removeAllItems();
+                comboProvinces.addItem(new ProvinceDTOIN("", "Seleccionar...", ""));
+                comboProvinces.setEnabled(false);
+            }
+        });
+        
+     // Seleccionar valor por defecto al inicio
+        comboProvinces.setSelectedIndex(0);
+        comboProvinces.addActionListener(e -> {
+            ProvinceDTOIN province = (ProvinceDTOIN) comboProvinces.getSelectedItem();
+            if (province != null && !province.getProvinceDTOId().equals(new String(""))) {
+                loadCities(province.getProvinceDTOId());
+                comboCities.setEnabled(true);
+            } else {
+                comboCities.removeAllItems();
+                comboCities.addItem(new CityDTOIN("", "Seleccionar...", "", ""));
+                comboCities.setEnabled(false);
             }
         });
 
@@ -142,7 +157,7 @@ public class LoadUserPNL extends JPanel {
                                      .toLocalDate();
                 if (dob.isAfter(LocalDate.now())) {
                     JOptionPane.showMessageDialog(
-                        LoadUserPNL.this,
+                        LoadPatientPNL.this,
                         "No puede seleccionar una fecha futura.",
                         "Fecha Inválida",
                         JOptionPane.ERROR_MESSAGE
@@ -185,9 +200,9 @@ public class LoadUserPNL extends JPanel {
         npd.add(new JLabel("Piso:")); npd.add(txtPiso);
         npd.add(new JLabel("Depto:")); npd.add(txtDepartamento);
         addRow(formPanel, gbc, row++, "Número:", npd);
-        addRow(formPanel, gbc, row++, "Pais:", comboCountry);
-        addRow(formPanel, gbc, row++, "Provincia:", comboProvince);
-        addRow(formPanel, gbc, row++, "Ciudad:", comboCity);
+        addRow(formPanel, gbc, row++, "Pais:", comboCountries);
+        addRow(formPanel, gbc, row++, "Provincia:", comboProvinces);
+        addRow(formPanel, gbc, row++, "Ciudad:", comboCities);
 
         JPanel center = new JPanel(new GridBagLayout());
         center.add(formPanel);
@@ -196,7 +211,19 @@ public class LoadUserPNL extends JPanel {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20,0));
         JButton guardar = new JButton("Guardar");
         JButton volver = new JButton("Volver al Inicio");
-        guardar.addActionListener(e->loadUser());
+        guardar.addActionListener(e->{
+			try {
+				try {
+					loadUser();
+				} catch (ValidationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
         volver.addActionListener(e->viewManager.showPnlMainMenu());
         btnPanel.add(guardar);
         btnPanel.add(volver);
@@ -204,21 +231,21 @@ public class LoadUserPNL extends JPanel {
     }
     
     private void loadCountries() {
-        comboCountry.removeAllItems();
-        comboCountry.addItem(new CountryDTOOUT("0,"Seleccionar..."));
-        for (CountryDTOOUT cdto : viewManager.getAllCountriesDTO()) comboCountry.addItem(cdto);
+        comboCountries.removeAllItems();
+        comboCountries.addItem(new CountryDTOIN("", "Seleccionar..."));
+        for (CountryDTOIN cdto : viewManager.getAllCountriesDTO()) comboCountries.addItem(cdto);
     }
 
-    private void loadProvinces(int countryId) {
-        comboProvince.removeAllItems();
-        comboProvince.addItem(new ProvinceDTOOUT("0,"Seleccionar...",0));
-        for (ProvinceDTOOUT pdto : viewManager.getProvincesDTOByCountryId(countryId)) comboProvince.addItem(pdto);
+    private void loadProvinces(String countryId) {
+        comboProvinces.removeAllItems();
+        comboProvinces.addItem(new ProvinceDTOIN("", "Seleccionar...", ""));
+        for (ProvinceDTOIN pdto : viewManager.getProvincesDTOByCountryId(countryId)) comboProvinces.addItem(pdto);
     }
 
-    private void loadCities(int provinceId) {
-        comboCity.removeAllItems();
-        comboCity.addItem(new CityDTOOUT("0","Seleccionar...","",provinceId));
-        for (CityDTOOUT cdto: viewManager.getCitiesDTOByProvinceId(provinceId)) comboCity.addItem(cdto);
+    private void loadCities(String provinceId) {
+        comboCities.removeAllItems();
+        comboCities.addItem(new CityDTOIN("", "Seleccionar...", "", provinceId));
+        for (CityDTOIN cdto: viewManager.getCitiesDTOByProvinceId(provinceId)) comboCities.addItem(cdto);
     }
 
     private void addRow(JPanel panel, GridBagConstraints gbc,int row,String label,JComponent comp) {
@@ -226,9 +253,9 @@ public class LoadUserPNL extends JPanel {
         gbc.gridx=1; panel.add(comp,gbc);
     }
 
-    private void loadUser() {
- 
-        viewManager.loadUser(
+    private void loadUser() throws SQLException, ValidationException {
+    	
+        viewManager.insertPatient(
             txtDocumento.getText().trim(),
             txtNombre.getText().trim(),
             txtApellido.getText().trim(),
@@ -238,9 +265,9 @@ public class LoadUserPNL extends JPanel {
             txtNumero.getText().trim(),
             txtPiso.getText().trim(),
             txtDepartamento.getText().trim(),
-            String.valueOf(((CountryDTOOUT)comboCountry.getSelectedItem()).getCountryDTOId()),
-            String.valueOf(((ProvinceDTOOUT)comboProvince.getSelectedItem()).getProvinceDTOId()),
-            String.valueOf(((CityDTOOUT)comboCity.getSelectedItem()).getCityDTOId())
+            String.valueOf(((CountryDTOIN)comboCountries.getSelectedItem()).getCountryDTOId()),
+            String.valueOf(((ProvinceDTOIN)comboProvinces.getSelectedItem()).getProvinceDTOId()),
+            String.valueOf(((CityDTOIN)comboCities.getSelectedItem()).getCityDTOId())
         );
         
     }

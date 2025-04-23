@@ -21,7 +21,7 @@ public class ProvinceDAO {
     
     private static final String SELECT_BY_COUNTRY =
             "SELECT province_id, province_name, country_id " +
-            "FROM tbl_province WHERE province_id = ? ORDER BY province_name";
+            "FROM tbl_province WHERE country_id = ? ORDER BY province_name";
     
     public List<Province> findAll() {
         List<Province> list = new ArrayList<>();

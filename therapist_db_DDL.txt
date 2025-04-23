@@ -36,41 +36,80 @@ CREATE TABLE IF NOT EXISTS tbl_city (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS tbl_user (
-  
-  user_id CHAR(36) NOT NULL PRIMARY KEY
-    DEFAULT (UUID()),
-  
-  user_dni CHAR(8) NOT NULL,
-  user_name VARCHAR(50) NOT NULL,
-  user_last_name VARCHAR(50) NOT NULL,
-  user_birth_date DATE NOT NULL,
-  user_email VARCHAR(100) NOT NULL,
-  user_address VARCHAR(100) NOT NULL,
-  user_address_number INT NOT NULL,
-  user_address_floor SMALLINT NULL,
-  user_address_department VARCHAR(10) NULL,
-  
+CREATE TABLE IF NOT EXISTS tbl_patient (
+  patient_id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  patient_dni CHAR(8) NOT NULL,
+  patient_name VARCHAR(50) NOT NULL,
+  patient_last_name VARCHAR(50) NOT NULL,
+  patient_birth_date DATE NOT NULL,
+  patient_email VARCHAR(100) NOT NULL,
+  patient_address VARCHAR(100) NOT NULL,
+  patient_address_number INT NOT NULL,
+  patient_address_floor SMALLINT NULL,
+  patient_address_department VARCHAR(10) NULL,
   country_id CHAR(36) NOT NULL,
   province_id CHAR(36) NOT NULL,
   city_id CHAR(36) NOT NULL,
-  
-  UNIQUE KEY uk_user_email (user_email),
-  
+  UNIQUE KEY uk_patient_dni (patient_dni),
+  UNIQUE KEY uk_patient_email (patient_email),
   FOREIGN KEY (country_id)
     REFERENCES tbl_country(country_id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
-  
   FOREIGN KEY (province_id)
     REFERENCES tbl_province(province_id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
-  
   FOREIGN KEY (city_id)
-    REFERENCES tbl_city(id)
+    REFERENCES tbl_city(city_id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS tbl_consultation (
+  consultation_id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  patient_id CHAR(36) NOT NULL,
+  start_datetime DATETIME NOT NULL,
+  end_datetime DATETIME NULL,
+  consultation_status ENUM('SCHEDULED','COMPLETED','CANCELLED') NOT NULL DEFAULT 'SCHEDULED',
+  consultation_notes TEXT NULL,
+  consultation_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (patient_id)
+	REFERENCES tbl_patient(patient_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB 
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_consultation_start ON tbl_consultation(start_datetime);
+
+CREATE TABLE IF NOT EXISTS tbl_event (
+  event_id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  event_title VARCHAR(150) NOT NULL,
+  event_description TEXT NULL,
+  start_datetime DATETIME NOT NULL,
+  end_datetime DATETIME NOT NULL,
+  event_created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB 
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+CREATE INDEX idx_event_start ON tbl_event(start_datetime);
+
+CREATE TABLE IF NOT EXISTS tbl_patient_note (
+  patint_note_id CHAR(36) NOT NULL PRIMARY KEY DEFAULT (UUID()),
+  patient_id CHAR(36) NOT NULL,
+  patint_note_content TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (patient_id)
+    REFERENCES tbl_patient(patient_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+  

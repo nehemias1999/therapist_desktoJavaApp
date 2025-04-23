@@ -14,8 +14,8 @@ public class CityService {
 		this.cityDAO = new CityDAO();
 	}
 
-	public List<CityDTOIN> getCitiesByProvinceId(UUID provinceId) {
-        return cityDAO.findCitiesByProvinceId(provinceId).stream()
+	public List<CityDTOIN> getCitiesByProvinceId(String provinceId) {
+        return cityDAO.findCitiesByProvinceId(UUID.fromString(provinceId)).stream()
         		.map(c -> new CityDTOIN(c.getCityId().toString(), c.getCityName(), c.getCityZIPCode(), c.getProvinceId().toString()))
         		.collect(Collectors.toList());
     }
