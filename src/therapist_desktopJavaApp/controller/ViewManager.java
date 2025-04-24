@@ -1,18 +1,22 @@
 package therapist_desktopJavaApp.controller;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import therapist_desktopJavaApp.view.MainFRM;
 import therapist_desktopJavaApp.exception.ValidationException;
 import therapist_desktopJavaApp.model.dto.in.CityDTOIN;
 import therapist_desktopJavaApp.model.dto.in.CountryDTOIN;
 import therapist_desktopJavaApp.model.dto.in.ProvinceDTOIN;
-import therapist_desktopJavaApp.view.LoadPatientPNL;
-import therapist_desktopJavaApp.view.MainMenuPNL;
-import therapist_desktopJavaApp.view.ViewCalendarPNL;
+import therapist_desktopJavaApp.view.ShowCalendarPNL;
+import therapist_desktopJavaApp.view.ShowConfigurationPNL;
+import therapist_desktopJavaApp.view.ShowPatientsPNL;
+import therapist_desktopJavaApp.view.SidebarPNL;
 
 public class ViewManager {
 	
@@ -21,32 +25,33 @@ public class ViewManager {
 	// Frame principal
 	
 	private MainFRM mainFRM;
-
-	// Paneles
-	
-    private MainMenuPNL pnlMainMenu;
-    private LoadPatientPNL pnlLoadPatient;
-    private ViewCalendarPNL pnlViewCalendar;
+	private final CardLayout cardLayout;
+    private final JPanel contentPanel;
+	private SidebarPNL sidebarPNL;
 
 	public ViewManager(Controller controller) {
 		this.controller = controller;
 		this.mainFRM = new MainFRM();
-			
-		addPanels();
 		
+		cardLayout = new CardLayout();
+        contentPanel = new JPanel(cardLayout);
+		mainFRM.add(contentPanel, BorderLayout.CENTER);
+		
+		this.sidebarPNL = new SidebarPNL(cardLayout, contentPanel);
+		mainFRM.add(sidebarPNL, BorderLayout.WEST);
+		
+		registerView("Ver calendario", new ShowCalendarPNL(), "");
+		registerView("Ver pacientes", new ShowPatientsPNL(), "");
+		registerView("Ver configuracion", new ShowConfigurationPNL(), "");
+        
 		mainFRM.setVisible(true);
 		
 	}
-	
-	private void addPanels() {
-		pnlMainMenu = new MainMenuPNL(this);
-		pnlLoadPatient = new LoadPatientPNL(this);
-		pnlViewCalendar = new ViewCalendarPNL(this);
-		
-		mainFRM.addPanel(pnlMainMenu, "MainMenu");
-		mainFRM.addPanel(pnlLoadPatient, "LoadPatient");
-		mainFRM.addPanel(pnlViewCalendar, "ViewCalendar");
-	}
+			
+    public void registerView(String name, JPanel panel, String iconPath) {
+        contentPanel.add(panel, name);
+        sidebarPNL.addMenuItem(name, iconPath);
+    }		
 		
 	public void showPnlMainMenu() {
 		mainFRM.showPanel("MainMenu");

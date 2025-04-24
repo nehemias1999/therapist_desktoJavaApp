@@ -12,19 +12,15 @@ public class MainFRM extends JFrame {
     
     public MainFRM() {
     	
-        super("Aplicación Gestión Terapeutas");
+        super("Gestión Terapeutas");
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); 
         setResizable(true);
+        setLayout(new BorderLayout());
         
-        cardLayout = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
-        
-        add(contentPanel);
-
     }
-    
+     
     public void addPanel(JPanel panel, String panelName) {
         this.contentPanel.add(panel, panelName);
     }    
@@ -32,5 +28,5 @@ public class MainFRM extends JFrame {
     public void showPanel(String panelName) {
         this.cardLayout.show(contentPanel, panelName);
     }
-    
+   
 }

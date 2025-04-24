@@ -30,7 +30,7 @@ public class Controller {
     			
     	viewManager = new ViewManager(this);
     	
-        this.initView();
+        //this.initView();
     }
     
     private void initView() {
